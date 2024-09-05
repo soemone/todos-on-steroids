@@ -398,6 +398,7 @@ button:active {
     margin: 0.35em;
     right: 0;
     top: 0;
+    z-index: 9;
 }
 
 #trying-login {
