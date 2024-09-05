@@ -3,6 +3,9 @@
     "dev": "deno run --watch --allow-net --allow-read server.ts"
   },
   "permissions": {
-      "env": ["SUPABASE_KEY"]
+      "env": ["SUPABASE_KEY"],
+      "net": true,
+      "read": true,
+      "write": true  
   }
 }
