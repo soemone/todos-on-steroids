@@ -41,7 +41,7 @@ async function authenticateUser(username: string, password: string) {
         return { success: false, message: 'User not found.' };
     }
   
-    const valid = await bcrypt.compare(password, user.password);
+    const valid = bcrypt.compareSync(password, user.password);
   
     if (!valid) {
       return { success: false, message: 'Invalid password.' };
