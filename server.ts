@@ -13,7 +13,7 @@ const key = await crypto.subtle.generateKey({ name: "HMAC", hash: "SHA-256" }, t
 const port = 8080;
 
 async function registerUser(username: string, password: string) {
-    const hashedPassword = await bcrypt.hash(password);
+    const hashedPassword = bcrypt.hashSync(password);
     const { data, error } = await supabase
                                     .from('users')
                                     .insert([{ username, password: hashedPassword }]);
