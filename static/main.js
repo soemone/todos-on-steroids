@@ -61,7 +61,7 @@ const load = async () => {
             const response = await request.json();
             const data = response?.data?.data;
             if (data && response.success) {
-                for(const todo of data) {
+                for(const todo of data.reverse()) {
                     todo_counter += 1;
                     add_todo(todo_counter, todo.value, todo.tag_content, todo.starred, JSON.parse(todo.metadata), todo.checked, false);
                 }
@@ -103,7 +103,7 @@ const load = async () => {
             const data = recieved?.data?.data;
 
             if (data) {
-                for(const todo of data) {
+                for(const todo of data.reverse()) {
                     todo_counter += 1;
                     add_todo(todo_counter, todo.value, todo.tag_content, todo.starred, JSON.parse(todo.metadata), todo.checked, false);
                 }
