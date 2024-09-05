@@ -1,0 +1,415 @@
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    /* variables */
+    --display-color: rgb(80, 80, 80);
+    --display-color-dark: rgb(60, 60, 60);
+    --primary: rgb(249, 245, 215);
+    --primary-medium: hsl(53, 19%, 72%);
+    --primary-dark: hsl(53, 19%, 65%);
+    --secondary: rgb(179, 168, 140);
+    --secondary-background: hsl(43, 20%, 45%);
+    --secondary-medium: hsl(43, 20%, 57%);
+    --secondary-dark: hsl(43, 20%, 50%);
+    --outline: rgb(255, 253, 220);
+    --tooltip: hsl(53, 19%, 65%);
+
+    font-size: calc(max(1.5vmax, 14px));
+}
+
+body, html {
+    background-color: var(--primary);
+    font-family: verdana;
+    color: var(--display-color);
+}
+
+.main-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.header {
+    font-size: calc(5vw + 5vh);
+    margin: 3vh auto 0vh auto;
+    width: fit-content;
+}
+
+.todos-container {
+    margin: auto;
+    width: 65vw;
+    height: 100%;
+    position: relative;
+    bottom: 0;
+    border-top-left-radius: 1vw;
+    border-top-right-radius: 1vw;
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.5s;
+}
+
+#todos-input {
+    width: 100%;
+    padding: 0.75em;
+    border: none;
+    outline: none;
+    border-top-left-radius: 0.5vw;
+    border-top-right-radius: 0.5vw;
+    background-color: var(--secondary);
+    transition: background-color 0.25s;
+    caret-color: var(--display-color);
+    color: var(--display-color);
+}
+
+#todos-input:hover, #todos-input:focus-within {
+    background-color: var(--secondary-medium);
+}
+
+#todos-input:focus ~ #todos-input-line::after {
+    width: 100%;
+}
+
+#todos-input-line {
+    position: absolute;
+    width: 100%;
+    height: calc(max(0.1vh, 1px));
+    align-self: end;
+    background-color: var(--display-color);
+}
+
+#todos-input-line::after {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 0;
+    transition: width 0.25s;
+    height: calc(max(0.2vh, 2px));
+    background-color: var(--outline);
+}
+
+#todos-list {
+    border: none;
+    outline: none;
+    background-color: var(--secondary);
+    height: 100%;
+    overflow: auto;
+}
+
+.todo {
+    border-bottom: calc(max(0.1vh, 1px)) solid var(--display-color);
+    width: 100%;
+    overflow: auto;
+    display: grid;
+    grid-template-columns: 1fr auto auto auto;
+    grid-template-rows: auto 1fr;
+    align-items: center;
+    transition: background-color 0.25s;
+}
+
+#starred, #other {
+    border-bottom: calc(max(0.1vh, 1px)) solid var(--display-color);
+    width: 100%;
+    overflow: auto;
+    justify-content: center;
+    align-items: center;
+    padding: 0.75em;
+    background-color: var(--secondary-medium);
+    display: none;
+}
+
+.show-section {
+    display: flex !important;
+}
+
+::selection {
+    background-color: var(--secondary-dark);
+    color: var(--display-color-dark);
+}
+
+@media all and (max-width: 800px) {
+    .todos-container {
+        width: 100vw;
+        border-radius: 0;
+    }
+
+    #todos-input {
+        border-radius: 0;
+    }
+}
+
+@media screen and (max-width: 1325px) and (min-width: 800px) {
+    .todos-container {
+        height: 75%;
+        border-radius: 1vw;
+    }
+
+    #todos-list {
+        border-bottom-left-radius: 1vw;
+        border-bottom-right-radius: 1vw;
+    }
+}
+
+@media screen and (max-height: 500px) {
+    .todos-container {
+        height: 100%;
+    }
+
+    #todos-list {
+        border-radius: 0;
+    }
+}
+
+/* checkbox */
+.todo-label {
+    display: grid;
+    grid-template-columns: 2.5vmax auto;
+    gap: 0.5em;
+    padding: 0.75em;
+    align-items: center;
+}
+
+.todo-label.checked {
+    text-decoration: line-through;
+}
+
+.todo.checked {
+    background-color: var(--secondary-background);
+}
+
+input[type="checkbox"] {
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: var(--primary);
+    margin: 0;
+    aspect-ratio: 1 / 1;
+    border: calc(max(0.2vw, 2px)) solid var(--display-color);
+    display: grid;
+    place-content: center;
+    border-radius: 0.25em;
+    transition: background-color 0.15s;
+}
+
+input[type="checkbox"]:checked {
+    background-color: var(--secondary);
+}
+
+input[type="checkbox"]:hover {
+    background-color: var(--secondary-dark);
+}
+
+input[type="checkbox"]::before {
+    content: "";
+    width: 0.3em;
+    height: 0.75em;
+    border-right: calc(max(0.2vw, 2px)) solid transparent;
+    border-bottom: calc(max(0.2vw, 2px)) solid transparent;
+    transform: translateY(-0.1em) rotate(45deg);
+    transition: border 0.35s;
+}
+
+input[type="checkbox"]:checked::before {
+    border-color: var(--display-color);
+}
+
+.todo img {
+    width: 2em;
+    height: 2em;
+    margin: 0.75em;
+    border-radius: 0.25em;
+    transition: background-color 0.25s;
+}
+
+#starred img {
+    width: 2em;
+    height: 2em;
+}
+
+.todos-container #todos-user-area #todo-search-buttons img {
+    width: 2em;
+    height: 2em;
+    padding: 0.25em;
+    border-radius: 0.25em;
+    background-color: var(--secondary-medium);
+    box-shadow: 0 0 0.15em var(--display-color);
+    transition: background-color 0.25s;
+}
+
+.todos-container #todos-user-area #todo-search-buttons {
+    position: absolute;
+    right: 0;
+    display: flex;
+    padding: 0.35em;
+    gap: 0.35em;
+}
+
+.todos-container #todos-user-area #todo-search-buttons img:hover {
+    background-color: var(--secondary-dark);
+}
+
+.todos-container #todos-user-area #todo-search-buttons img:active {
+    background-color: var(--secondary-background);
+}
+
+.todo img:hover {
+    background-color: var(--secondary-medium);
+}
+
+.todo img:active {
+    background-color: var(--secondary-dark);
+}
+
+#todos-user-area {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+}
+
+#tag.selected {
+    background-color: var(--secondary-background) !important;
+}
+
+#search.selected {
+    background-color: var(--secondary-background) !important;
+}
+
+.todo .tag {
+    max-width: 50vw;
+    overflow: hidden;
+    grid-column: span 4;
+    width: fit-content;
+    background: var(--primary-medium);
+    padding: 0.25em 0.5em 0.25em .5em;
+    border-radius: 99999em;
+    margin: 0.75em 0 0 0.75em;
+}
+
+.todo.checked .tag {
+    background: var(--primary-dark);
+}
+
+.todo.remove {
+    display: none !important;
+}
+
+#hover-tooltip {
+    position: absolute;
+    padding: 0.5em;
+    background-color: var(--tooltip);
+    border-radius: 0.25em;
+    z-index: 999;
+    opacity: 0;
+    pointer-events: none;
+    user-select: none;
+    transition: opacity 0.25s 0.25s, transform 0.25s;
+}
+
+/* modals, login, signup */
+
+#modal {
+    position: fixed;
+    background-color: var(--primary);
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    transition: transform 0.5s;
+}
+
+#login-input-area {
+    display: flex;
+    flex-direction: column;
+    padding: 0.75em;
+    border-radius: 0.35em;
+    background-color: var(--primary-medium);
+    min-width: 50vw;
+}
+
+#login-header {
+    font-size: 2em;
+}
+
+.input {
+    margin-top: 0.75em;
+    width: 100%;
+    padding: 0.75em;
+    border: none;
+    outline: none;
+    border-radius: 0.35em 0.35em 0 0;
+    background-color: var(--secondary);
+    transition: background-color 0.25s;
+    caret-color: var(--display-color);
+    color: var(--display-color);
+}
+
+.input:hover, .input:focus-within {
+    background-color: var(--secondary-medium);
+}
+
+.input:focus + .input-line::after {
+    width: 100%;
+}
+
+.input-line {
+    position: relative;
+    width: 100%;
+    height: calc(max(0.1vh, 1px));
+    background-color: var(--display-color);
+}
+
+.input-line::after {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 0;
+    transition: width 0.25s;
+    height: calc(max(0.2vh, 2px));
+    background-color: var(--outline);
+}
+
+button {
+    margin-top: 0.75em;
+    border: 0;
+    padding: 0.75em;
+    background-color: var(--secondary);
+    border-radius: 0.35em;
+    transition: background-color 0.25s;
+}
+
+button:hover {
+    background-color: var(--secondary-medium);
+}
+
+button:active {
+    background-color: var(--secondary-dark);
+}
+
+#logout, #login {
+    margin-top: 0;
+}
+
+#account-controls {
+    position: absolute;
+    margin: 0.35em;
+    right: 0;
+    top: 0;
+}
+
+#trying-login {
+    font-size: 1.5em;
+    text-align: center;
+    margin-bottom: 0.75em;
+}
+
+#modal.hide {
+    transform: translateX(100vw);
+}
+
+#login.hide, #logout.hide, #trying-login.hide {
+    display: none;
+}

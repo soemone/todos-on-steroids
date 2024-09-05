@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="/static/style.css" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    </head>
+    <body>
+        <div id="modal">
+            <div id="login-container">
+                <div id="trying-login" class="hide">Attempting to log you in...</div>
+                <div id="login-input-area">
+                    <div id="login-header">Login or Signup</div>
+                    <input id="username" class="input" type="text" placeholder="username" />
+                    <span class="input-line"></span>
+                    <input id="password" class="input" placeholder="password" />
+                    <span class="input-line"></span>
+                    <button id="form-login">Login / Signup</button>
+                    <button id="no-login">Continue locally</button>
+                </div>
+            </div>
+        </div>
+        <div id="hover-tooltip">Tooltip</div>
+        <div id="account-controls">
+            <button id="logout">Logout</button>
+            <button id="login">Login</button>
+        </div>
+        <div class="main-container">
+            <div class="todos-container">
+                <div class="header">Todos</div>
+                <span id="todos-user-area">
+                    <input id="todos-input" type="text" placeholder="Type in your todos here" />
+                    <span id="todos-input-line"></span>
+                    <span id="todo-search-buttons">
+                        <img src="/static/search.svg" id="search"/>
+                        <img src="/static/tag.svg" id="tag"/>
+                    </span>
+                </span>
+                <div id="todos-list">
+                    <div id="starred">
+                        <img src="/static/star_fill.svg" />
+                        Starred Todos
+                    </div>
+
+                    <div id="other">
+                        Other Todos
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="/static/main.js"></script>
+    </body>
+</html>
