@@ -75,11 +75,17 @@ const load = async () => {
         });
         const recieved = await result.json();
         jwt = recieved.jwt;
+        if (recieved.invalid_password) {
+            alert(`The username ${username.value} already exists / The password you entered was invalid!`);
+            return;
+        }
+
         if (recieved.success) {
             modal.classList.add('hide');
             login.classList.add('hide');
             logout.classList.remove('hide');
             const data = recieved?.data?.data;
+
             if (data) {
                 for(const todo of data) {
                     todo_counter += 1;
@@ -96,6 +102,9 @@ const load = async () => {
         } else {
             alert('Failed to login! Check your connection and try again later, or continue locally.');
         }
+
+        username.value = '';
+        password.value = '';
     });
 
     no_login.addEventListener('click', () => {

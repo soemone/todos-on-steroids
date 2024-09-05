@@ -38,13 +38,14 @@ async function authenticateUser(username: string, password: string) {
   
     if (error) {
         console.error('Error fetching user:', error.message);
-        return { success: false, message: 'User not found.' };
+        return { success: false };
     }
   
     const valid = bcrypt.compareSync(password, user.password);
   
     if (!valid) {
-      return { success: false, message: 'Invalid password.' };
+        console.log(`The user ${username} has entered an invalid password`);
+        return { success: false, invalid_password: true };
     }
   
     const jwt = await create({ alg: "HS256", typ: "JWT" }, { username }, key);
@@ -54,6 +55,7 @@ async function authenticateUser(username: string, password: string) {
 }
     
 async function uploadData(username: string, updated_data: Object) {
+    // Should probably encrypt the data, but eh.
     const { data, error } = await supabase
                                     .from('users')
                                     .update({ data: updated_data })
@@ -104,17 +106,22 @@ const handler = async (request: Request, info: ServeHandlerInfo): Promise<Respon
         console.log('attepting to auth', username);
         try {
             const result = await authenticateUser(username, password);
+
+            if (result.invalid_password) {
+                return new Response(JSON.stringify({ success: false, invalid_password: true, data: null, status: 200, jwt: null }));
+            }
+
             if (!result.success) {
                 const register = await registerUser(username, password);
                 if (!register.success) {
-                    return new Response(JSON.stringify({ success: false, data: null, status: 200, jwt: null }))
+                    return new Response(JSON.stringify({ success: false, data: null, status: 200, jwt: null }));
                 }
-                return new Response(JSON.stringify({ success: true, data: register.data, jwt: register.jwt, status: 200 }))
+                return new Response(JSON.stringify({ success: true, data: register.data, jwt: register.jwt, status: 200 }));
             }
-            return new Response(JSON.stringify({ success: true, data: result.data, jwt: result.jwt, status: 200 }))
+            return new Response(JSON.stringify({ success: true, data: result.data, jwt: result.jwt, status: 200 }));
         } catch (e) {
             console.error(e);
-            return new Response(JSON.stringify({ success: false, data: e, jwt: null, status: 200 }))
+            return new Response(JSON.stringify({ success: false, data: e, jwt: null, status: 200 }));
         }
     } else if (url.pathname.startsWith('/upload/')) {
         const { data } = await request.json();
