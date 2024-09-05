@@ -2,8 +2,8 @@
 
 const todo_list = document.querySelector('#todos-list');
 const todo_input = document.querySelector('#todos-input');
-const starred_todos = document.querySelector("#starred");
-const other_todos = document.querySelector("#other");
+let starred_todos = document.querySelector("#starred");
+let other_todos = document.querySelector("#other");
 const tag = document.querySelector("#tag");
 const search = document.querySelector("#search");
 const tooltip = document.querySelector("#hover-tooltip");
@@ -27,6 +27,22 @@ let jwt = null;
 const load = async () => {
     console.log('loaded scripts.');
     
+    username.addEventListener('keypress', (e) => {
+        if ((e.keyCode == 13 || e.key == 'Enter') && password.value.trim() == '') {
+            e.preventDefault();
+            password.focus();
+        } else if (e.keyCode == 13 || e.key == 'Enter') {
+            form_login.click();
+        }
+    });
+
+    password.addEventListener('keypress', (e) => {
+        if (e.keyCode == 13 || e.key == 'Enter') {
+            e.preventDefault();
+            form_login.click();
+        }
+    });
+
     if (document.cookie) {
         const selector = `${encodeURIComponent('jwt')}=`;
         const idx = document.cookie.indexOf(selector);
@@ -536,6 +552,9 @@ const emptyTodos = () => {
 
     todo_list.appendChild(starred);
     todo_list.appendChild(other);
+
+    starred_todos = starred;
+    other_todos = other;
 }
 
 const deleteCookies = () => {
