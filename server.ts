@@ -13,6 +13,7 @@ const key = await crypto.subtle.generateKey({ name: "HMAC", hash: "SHA-256" }, t
 const port = 8080;
 
 async function registerUser(username: string, password: string) {
+    // The async variant does not work as expected in deno deploy. (The workers API is unimplemented)
     const hashedPassword = bcrypt.hashSync(password);
     const { data, error } = await supabase
                                     .from('users')
@@ -102,8 +103,18 @@ const handler = async (request: Request, info: ServeHandlerInfo): Promise<Respon
         else
             return new Response(file.readable, { headers: { 'Content-Type': 'text/plain' }, status: 200 });
     } else if (url.pathname.startsWith('/login/')) {
+
+        // Make sure only post requests are allowed
+        if (request.method !== 'POST')
+            return new Response(JSON.stringify({ success: false, invalid_method: true, data: null, status: 400, jwt: null }));
+
         const { password, username } = await request.json();
+
+        if (password.length < 3 || username.length < 3)
+            return new Response(JSON.stringify({ success: false, invalid_data: true, data: null, status: 400, jwt: null }));
+
         console.log('attepting to auth', username);
+
         try {
             const result = await authenticateUser(username, password);
 
@@ -116,7 +127,7 @@ const handler = async (request: Request, info: ServeHandlerInfo): Promise<Respon
                 if (!register.success) {
                     return new Response(JSON.stringify({ success: false, data: null, status: 200, jwt: null }));
                 }
-                return new Response(JSON.stringify({ success: true, data: register.data, jwt: register.jwt, status: 200 }));
+                return new Response(JSON.stringify({ success: true, new_user: true, data: register.data, jwt: register.jwt, status: 200 }));
             }
             return new Response(JSON.stringify({ success: true, data: result.data, jwt: result.jwt, status: 200 }));
         } catch (e) {
@@ -124,14 +135,23 @@ const handler = async (request: Request, info: ServeHandlerInfo): Promise<Respon
             return new Response(JSON.stringify({ success: false, data: e, jwt: null, status: 200 }));
         }
     } else if (url.pathname.startsWith('/upload/')) {
+
+        if (request.method !== 'POST')
+            return new Response(JSON.stringify({ success: false, invalid_method: true, data: null, status: 400, jwt: null }));
+
         const { data } = await request.json();
+
         console.log('attempting to upload data');
+
         const authHeader = request.headers.get("Authorization");
+        
         if (!authHeader || !authHeader.startsWith("JWT ")) {
             console.error('Missing / invalid jwt token sent');
             return new Response(JSON.stringify({ data: null, success: false, status: 400 }));
         }
+        
         const jwt = authHeader.split(" ")[1]; 
+
         try {
             const { username } = await verify(jwt, key, "HS256");
             const response = await uploadData(username, data);    
@@ -141,11 +161,17 @@ const handler = async (request: Request, info: ServeHandlerInfo): Promise<Respon
             return new Response(JSON.stringify({ data: null, success: false, status: 400 }))
         } 
     } else if (url.pathname.startsWith('/get/')) {
+
+        if (request.method !== 'POST')
+            return new Response(JSON.stringify({ success: false, invalid_method: true, data: null, status: 400, jwt: null }));
+
         const authHeader = request.headers.get("Authorization");
+
         if (!authHeader || !authHeader.startsWith("JWT ")) {
             console.error('Missing / invalid jwt token');
             return new Response(JSON.stringify({ data: null, success: false, status: 400 }));
         }
+
         const jwt = authHeader.split(" ")[1]; 
         try {
             const { username } = await verify(jwt, key, "HS256");

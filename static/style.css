@@ -3,25 +3,47 @@
     padding: 0;
     margin: 0;
     /* variables */
-    --display-color: rgb(80, 80, 80);
-    --display-color-dark: rgb(60, 60, 60);
-    --primary: rgb(249, 245, 215);
-    --primary-medium: hsl(53, 19%, 72%);
-    --primary-dark: hsl(53, 19%, 65%);
-    --secondary: rgb(179, 168, 140);
-    --secondary-background: hsl(43, 20%, 45%);
-    --secondary-medium: hsl(43, 20%, 57%);
-    --secondary-dark: hsl(43, 20%, 50%);
-    --outline: rgb(255, 253, 220);
-    --tooltip: hsl(53, 19%, 65%);
+    --light-display-color: rgb(80, 80, 80);
+    --light-display-color-b: rgb(60, 60, 60);
+    --light-primary: rgb(249, 245, 215);
+    --light-primary-a: hsl(53, 19%, 72%);
+    --light-primary-b: hsl(53, 19%, 65%);
+    --light-secondary: rgb(179, 168, 140);
+    --light-secondary-c: hsl(43, 20%, 45%);
+    --light-secondary-a: hsl(43, 20%, 57%);
+    --light-secondary-b: hsl(43, 20%, 50%);
+    --light-outline: rgb(255, 253, 220);
+    --light-outline-b: rgb(80, 80, 80);
+    --light-tooltip: hsl(53, 19%, 65%);
+    --light-shadow-color: var(--light-display-color);
+
+    --dark-display-color: hsl(48, 10%, 60%);
+    --dark-display-color-b: hsl(48, 10%, 75%);
+    --dark-primary: hsl(48, 10%, 8%);
+    --dark-primary-a: hsl(48, 10%, 13%);
+    --dark-primary-b: hsl(48, 10%, 25%);
+    --dark-secondary: rgb(50, 48, 43);
+    --dark-secondary-c: rgb(77, 76, 72);
+    --dark-secondary-a: rgb(57, 55, 51);
+    --dark-secondary-c: rgb(67, 66, 63);
+    --dark-outline: hsl(48, 10%, 55%);
+    --dark-outline-b: hsl(48, 10%, 35%);
+    --dark-tooltip: hsl(48, 10%, 16%);
+    --dark-shadow-color: var(--dark-primary);
 
     font-size: calc(max(1.5vmax, 14px));
 }
 
 body, html {
-    background-color: var(--primary);
+    background-color: var(--light-primary);
     font-family: verdana;
-    color: var(--display-color);
+    color: var(--light-display-color);
+    transition: background-color 0.25s;
+}
+
+html.dark, html.dark body {
+    color: var(--dark-display-color);
+    background-color: var(--dark-primary);
 }
 
 .main-container {
@@ -47,7 +69,6 @@ body, html {
     background-color: transparent;
     display: flex;
     flex-direction: column;
-    transition: box-shadow 0.5s;
 }
 
 #todos-input {
@@ -55,16 +76,26 @@ body, html {
     padding: 0.75em;
     border: none;
     outline: none;
-    border-top-left-radius: 0.5vw;
-    border-top-right-radius: 0.5vw;
-    background-color: var(--secondary);
+    border-top-left-radius: 0.35em;
+    border-top-right-radius: 0.35em;
+    background-color: var(--light-secondary);
     transition: background-color 0.25s;
-    caret-color: var(--display-color);
-    color: var(--display-color);
+    caret-color: var(--light-display-color);
+    color: var(--light-display-color);
+}
+
+html.dark #todos-input {
+    background-color: var(--dark-secondary);
+    caret-color: var(--dark-display-color);
+    color: var(--dark-display-color);
 }
 
 #todos-input:hover, #todos-input:focus-within {
-    background-color: var(--secondary-medium);
+    background-color: var(--light-secondary-a);
+}
+
+html.dark #todos-input:hover, html.dark #todos-input:focus-within {
+    background-color: var(--dark-secondary-a);
 }
 
 #todos-input:focus ~ #todos-input-line::after {
@@ -76,7 +107,11 @@ body, html {
     width: 100%;
     height: calc(max(0.1vh, 1px));
     align-self: end;
-    background-color: var(--display-color);
+    background-color: var(--light-outline-b);
+}
+
+html.dark #todos-input-line {
+    background-color: var(--dark-outline-b);
 }
 
 #todos-input-line::after {
@@ -86,19 +121,27 @@ body, html {
     width: 0;
     transition: width 0.25s;
     height: calc(max(0.2vh, 2px));
-    background-color: var(--outline);
+    background-color: var(--light-outline);
+}
+
+html.dark #todos-input-line::after {
+    background-color: var(--dark-outline);
 }
 
 #todos-list {
     border: none;
     outline: none;
-    background-color: var(--secondary);
+    background-color: var(--light-secondary);
     height: 100%;
     overflow: auto;
 }
 
+html.dark #todos-list {
+    background-color: var(--dark-secondary);
+}
+
 .todo {
-    border-bottom: calc(max(0.1vh, 1px)) solid var(--display-color);
+    border-bottom: calc(max(0.1vh, 1px)) solid var(--light-outline-b);
     width: 100%;
     overflow: auto;
     display: grid;
@@ -108,15 +151,25 @@ body, html {
     transition: background-color 0.25s;
 }
 
+html.dark .todo {
+    border-bottom: calc(max(0.1vh, 1px)) solid var(--dark-outline-b);
+}
+
 #starred, #other {
-    border-bottom: calc(max(0.1vh, 1px)) solid var(--display-color);
+    border-bottom: calc(max(0.1vh, 1px)) solid var(--light-outline-b);
     width: 100%;
     overflow: auto;
     justify-content: center;
     align-items: center;
     padding: 0.75em;
-    background-color: var(--secondary-medium);
+    background-color: var(--light-secondary-a);
     display: none;
+}
+
+
+html.dark #starred, html.dark #other {
+    border-bottom: calc(max(0.1vh, 1px)) solid var(--dark-outline-b);
+    background-color: var(--dark-secondary-a);
 }
 
 .show-section {
@@ -124,8 +177,13 @@ body, html {
 }
 
 ::selection {
-    background-color: var(--secondary-dark);
-    color: var(--display-color-dark);
+    background-color: var(--light-secondary-c);
+    color: var(--light-display-color-b);
+}
+
+html.dark ::selection {
+    background-color: var(--dark-secondary-c);
+    color: var(--dark-display-color-b);
 }
 
 @media all and (max-width: 800px) {
@@ -146,8 +204,8 @@ body, html {
     }
 
     #todos-list {
-        border-bottom-left-radius: 1vw;
-        border-bottom-right-radius: 1vw;
+        border-bottom-left-radius: 0.35em;
+        border-bottom-right-radius: 0.35em;
     }
 }
 
@@ -175,28 +233,47 @@ body, html {
 }
 
 .todo.checked {
-    background-color: var(--secondary-background);
+    background-color: var(--light-secondary-c);
+}
+
+html.dark .todo.checked {
+    background-color: var(--dark-secondary-c);
 }
 
 input[type="checkbox"] {
     -webkit-appearance: none;
     appearance: none;
-    background-color: var(--primary);
+    background-color: var(--light-primary);
     margin: 0;
     aspect-ratio: 1 / 1;
-    border: calc(max(0.2vw, 2px)) solid var(--display-color);
+    border: calc(max(0.2vw, 2px)) solid var(--light-display-color);
     display: grid;
     place-content: center;
     border-radius: 0.25em;
     transition: background-color 0.15s;
 }
 
+
+html.dark input[type="checkbox"] {
+    background-color: var(--dark-primary);
+    border: calc(max(0.2vw, 2px)) solid var(--dark-display-color);
+}
+
 input[type="checkbox"]:checked {
-    background-color: var(--secondary);
+    background-color: var(--light-secondary);
 }
 
 input[type="checkbox"]:hover {
-    background-color: var(--secondary-dark);
+    background-color: var(--light-secondary-c);
+}
+
+
+html.dark input[type="checkbox"]:checked {
+    background-color: var(--dark-secondary);
+}
+
+html.dark input[type="checkbox"]:hover {
+    background-color: var(--dark-secondary-c);
 }
 
 input[type="checkbox"]::before {
@@ -210,7 +287,11 @@ input[type="checkbox"]::before {
 }
 
 input[type="checkbox"]:checked::before {
-    border-color: var(--display-color);
+    border-color: var(--light-display-color);
+}
+
+html.dark input[type="checkbox"]:checked::before {
+    border-color: var(--dark-display-color);
 }
 
 .todo img {
@@ -231,9 +312,14 @@ input[type="checkbox"]:checked::before {
     height: 2em;
     padding: 0.25em;
     border-radius: 0.25em;
-    background-color: var(--secondary-medium);
-    box-shadow: 0 0 0.15em var(--display-color);
+    background-color: var(--light-secondary-a);
+    box-shadow: 0 0 0.15em var(--light-shadow-color);
     transition: background-color 0.25s;
+}
+
+html.dark .todos-container #todos-user-area #todo-search-buttons img {
+    background-color: var(--dark-secondary-a);
+    box-shadow: 0 0 0.15em var(--dark-shadow-color);
 }
 
 .todos-container #todos-user-area #todo-search-buttons {
@@ -245,19 +331,35 @@ input[type="checkbox"]:checked::before {
 }
 
 .todos-container #todos-user-area #todo-search-buttons img:hover {
-    background-color: var(--secondary-dark);
+    background-color: var(--light-secondary-c);
 }
 
 .todos-container #todos-user-area #todo-search-buttons img:active {
-    background-color: var(--secondary-background);
+    background-color: var(--light-secondary-c);
 }
 
 .todo img:hover {
-    background-color: var(--secondary-medium);
+    background-color: var(--light-secondary-a);
 }
 
 .todo img:active {
-    background-color: var(--secondary-dark);
+    background-color: var(--light-secondary-c);
+}
+
+html.dark .todos-container #todos-user-area #todo-search-buttons img:hover {
+    background-color: var(--dark-secondary-c);
+}
+
+html.dark .todos-container #todos-user-area #todo-search-buttons img:active {
+    background-color: var(--dark-secondary-c);
+}
+
+html.dark .todo img:hover {
+    background-color: var(--dark-secondary-a);
+}
+
+html.dark .todo img:active {
+    background-color: var(--dark-secondary-c);
 }
 
 #todos-user-area {
@@ -267,11 +369,19 @@ input[type="checkbox"]:checked::before {
 }
 
 #tag.selected {
-    background-color: var(--secondary-background) !important;
+    background-color: var(--light-secondary-c) !important;
 }
 
 #search.selected {
-    background-color: var(--secondary-background) !important;
+    background-color: var(--light-secondary-c) !important;
+}
+
+html.dark #tag.selected {
+    background-color: var(--dark-secondary-c) !important;
+}
+
+html.dark #search.selected {
+    background-color: var(--dark-secondary-c) !important;
 }
 
 .todo .tag {
@@ -279,14 +389,22 @@ input[type="checkbox"]:checked::before {
     overflow: hidden;
     grid-column: span 4;
     width: fit-content;
-    background: var(--primary-medium);
+    background: var(--light-primary-a);
     padding: 0.25em 0.5em 0.25em .5em;
     border-radius: 99999em;
     margin: 0.75em 0 0 0.75em;
 }
 
+html.dark .todo .tag {
+    background: var(--dark-primary-a);
+}
+
 .todo.checked .tag {
-    background: var(--primary-dark);
+    background: var(--light-primary-b);
+}
+
+html.dark .todo.checked .tag {
+    background: var(--dark-primary-b);
 }
 
 .todo.remove {
@@ -296,7 +414,7 @@ input[type="checkbox"]:checked::before {
 #hover-tooltip {
     position: absolute;
     padding: 0.5em;
-    background-color: var(--tooltip);
+    background-color: var(--light-tooltip);
     border-radius: 0.25em;
     z-index: 999;
     opacity: 0;
@@ -305,11 +423,15 @@ input[type="checkbox"]:checked::before {
     transition: opacity 0.25s 0.25s, transform 0.25s;
 }
 
+html.dark #hover-tooltip {
+    background-color: var(--dark-tooltip);
+}
+
 /* modals, login, signup */
 
 #modal {
     position: fixed;
-    background-color: var(--primary);
+    background-color: var(--light-primary);
     width: 100vw;
     height: 100vh;
     top: 0;
@@ -318,7 +440,12 @@ input[type="checkbox"]:checked::before {
     align-items: center;
     justify-content: center;
     z-index: 15;
-    transition: transform 0.5s;
+    transition: transform 0.5s, background-color 0.25s;
+}
+
+
+html.dark #modal {
+    background-color: var(--dark-primary);
 }
 
 #login-input-area {
@@ -326,9 +453,14 @@ input[type="checkbox"]:checked::before {
     flex-direction: column;
     padding: 0.75em;
     border-radius: 0.35em;
-    background-color: var(--primary-medium);
+    background-color: var(--light-primary-a);
     min-width: 50vw;
 }
+
+html.dark #login-input-area {
+    background-color: var(--dark-primary-a);
+}
+
 
 #login-header {
     font-size: 2em;
@@ -341,14 +473,24 @@ input[type="checkbox"]:checked::before {
     border: none;
     outline: none;
     border-radius: 0.35em 0.35em 0 0;
-    background-color: var(--secondary);
+    background-color: var(--light-secondary);
     transition: background-color 0.25s;
-    caret-color: var(--display-color);
-    color: var(--display-color);
+    caret-color: var(--light-display-color);
+    color: var(--light-display-color);
+}
+
+html.dark .input {
+    background-color: var(--dark-secondary);
+    caret-color: var(--dark-display-color);
+    color: var(--dark-display-color);
 }
 
 .input:hover, .input:focus-within {
-    background-color: var(--secondary-medium);
+    background-color: var(--light-secondary-a);
+}
+
+html.dark .input:hover, html.dark .input:focus-within {
+    background-color: var(--dark-secondary-a);
 }
 
 .input:focus + .input-line::after {
@@ -359,7 +501,11 @@ input[type="checkbox"]:checked::before {
     position: relative;
     width: 100%;
     height: calc(max(0.1vh, 1px));
-    background-color: var(--display-color);
+    background-color: var(--light-outline-b);
+}
+
+html.dark .input-line {
+    background-color: var(--dark-outline-b);
 }
 
 .input-line::after {
@@ -369,24 +515,42 @@ input[type="checkbox"]:checked::before {
     width: 0;
     transition: width 0.25s;
     height: calc(max(0.2vh, 2px));
-    background-color: var(--outline);
+    background-color: var(--light-outline);
+}
+
+html.dark .input-line::after {
+    background-color: var(--dark-outline);
 }
 
 button {
     margin-top: 0.75em;
     border: 0;
     padding: 0.75em;
-    background-color: var(--secondary);
+    background-color: var(--light-secondary);
     border-radius: 0.35em;
     transition: background-color 0.25s;
+    color: var(--light-display-color);
 }
 
 button:hover {
-    background-color: var(--secondary-medium);
+    background-color: var(--light-secondary-a);
 }
 
 button:active {
-    background-color: var(--secondary-dark);
+    background-color: var(--light-secondary-c);
+}
+
+html.dark button {
+    background-color: var(--dark-secondary);
+    color: var(--dark-display-color);
+}
+
+html.dark button:hover {
+    background-color: var(--dark-secondary-a);
+}
+
+html.dark button:active {
+    background-color: var(--dark-secondary-c);
 }
 
 #logout, #login {
@@ -413,4 +577,16 @@ button:active {
 
 #login.hide, #logout.hide, #trying-login.hide {
     display: none;
+}
+
+img, #login-header, #trying-login, #account-controls, #starred, #other, .header, button {
+    user-select: none;
+}
+
+#color-scheme {
+    position: absolute;
+    margin: 0.35em;
+    left: 0;
+    top: 0;
+    z-index: 20;
 }

@@ -15,6 +15,7 @@ const trying_login = document.querySelector("#trying-login");
 const username = document.querySelector("#username");
 const password = document.querySelector("#password");
 const modal = document.querySelector('#modal');
+const color_scheme = document.querySelector('#color-scheme');
 
 const removed_elements = [];
 
@@ -27,6 +28,17 @@ let jwt = null;
 const load = async () => {
     console.log('loaded scripts.');
     
+    color_scheme.addEventListener('click', () => {
+        const html = (document.body || window.body || window.document.body).parentElement || document.querySelector('html');
+        if (html.classList.contains('dark')) {
+            html.classList.remove('dark');
+            color_scheme.textContent = 'Dark';
+        } else {
+            html.classList.add('dark');
+            color_scheme.textContent = 'Light';
+        }
+    })
+
     username.addEventListener('keypress', (e) => {
         if ((e.keyCode == 13 || e.key == 'Enter') && password.value.trim() == '') {
             e.preventDefault();
@@ -82,17 +94,36 @@ const load = async () => {
  
     form_login.addEventListener('click', async () => {
         console.log('attempting to login...');
+
+        const alias = username.value.trim();
+        const secret_key = password.value.trim();
+
+        if (alias.length < 3) {
+            alert('The username should at least be 3 characters long (not including leading & trailing spaces)!');
+            return;
+        }
+
+        if (secret_key.length < 3) {
+            alert('The password should at least be 3 characters long (not including leading & trailing spaces)!');
+            return;
+        }
+
         const result = await fetch('/login/', {
             method: 'POST',
             body: JSON.stringify({
-                password: password.value,
-                username: username.value,
+                password: secret_key,
+                username: alias,
             }),
         });
+        
         const recieved = await result.json();
         jwt = recieved.jwt;
+
         if (recieved.invalid_password) {
-            alert(`The username ${username.value} already exists / The password you entered was invalid!`);
+            alert(`The username ${alias} already exists / The password you entered was invalid!`);
+            return;
+        } else if (recieved.invalid_data) {
+            alert(`The username or password provided was not long enough (at least 3 characters excluding leading & trailing spaces)!`);
             return;
         }
 
@@ -101,6 +132,9 @@ const load = async () => {
             login.classList.add('hide');
             logout.classList.remove('hide');
             const data = recieved?.data?.data;
+
+            if (recieved.new_user)
+                alert(`Welcome! You have been registered as ${alias}. Remember your password, you need it to login. Have fun with your future Todos!`)
 
             if (data) {
                 for(const todo of data.reverse()) {
@@ -111,6 +145,7 @@ const load = async () => {
 
             if (jwt) {
                 const now = Date.now();
+                // Keep the cookies stored for six hours, an arbitrary duration
                 const six_hrs = new Date(now + 6 /* hours */ * 60 /* minutes */ * 60  /* seconds */ * 1000 /* milliseconds */);
                 document.cookie = `${encodeURIComponent('jwt')}=${encodeURIComponent(jwt)};expires=${six_hrs.toGMTString()};secure;`
             }
@@ -330,7 +365,7 @@ const add_todo = async (index = 0, value = 'todo data', tag_content = null, star
 
     check_if_checked();
 
-    input.addEventListener('input', async () => { await updateData(); check_if_checked(); });
+    input.addEventListener('input', async () => { check_if_checked(); await updateData(); });
 
     label.appendChild(input);
     const text = document.createElement('span');
